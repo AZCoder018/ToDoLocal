@@ -6,13 +6,15 @@
 
     <meta charset="UTF-8">
     <title>To Do App!</title>
-
+    <link href="styles.css" type="text/css" rel="stylesheet">
+    
     <style>
       #todo-item {
         font-weight: 700;
         font-size: 2em;
       }
     </style>
+
   </head>
 
   <body>
@@ -33,16 +35,35 @@
     <!-- jQuery -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
+    <!-- Customer Script -->
+  
     <!-- Script -->
 
     <script>
-
+     var theList = [];
     // Create an initial toDoCount variable
-    var toDoCount = 0;
+    
 
     //Create array
 
-    var list = [];
+    var currentList = localStorage.getItem("theList") != null ? localStorage.getItem("theList"):[];
+     
+    if(currentList.length > 0){
+      theList = currentList.split(',');
+    //console.log(localStorage.getItem("theList").length);
+    //If there are existing elements in localStorage, load to the array
+      for(var i=0; i < theList.length; i++){
+         
+        $("#to-dos").append($("<p>")).append(theList[i]).append($('<br>')).append($('<br>'));
+      
+      }
+    } 
+    
+    var toDoCount = theList.length;
+     
+    
+     
+  
 
     //  On Click event associated with the add-to-do function
     $("#add-to-do").on("click", function(event) {
@@ -50,7 +71,7 @@
 
       // Get the to-do "value" from the textbox and store it a variable
       var toDoTask = $("#to-do").val().trim();
-
+     
       // Create a new variable that will hold a "<p>" tag.
       // Then give it an ID in the following form:
       // "item-4" or "item-3" or "item-99", where the number is equal to toDoCount.
@@ -72,13 +93,25 @@
 
       // Append the button to the to do item
       toDoItem = toDoItem.prepend(toDoClose);
-
+       
+       
       // Add the button and to do item to the to-dos div
       $("#to-dos").append(toDoItem);
-
+      theList.push(toDoItem.html());
         //Saving to local storage
+          
+         
 
-        list.push(toDoItem);
+         
+
+       console.log(theList);
+
+       localStorage.setItem("theList", theList);
+
+      
+        
+        
+
 
       //  localStorage.setItem("stuff-" + toDoCount, toDoItem); //
 
@@ -97,13 +130,15 @@
     // (NOTE: Pay attention to the unusual syntax here for the click event.
     // Because we are creating click events on "dynamic" content, we can't just use the usual "on" "click" syntax.)
     $(document.body).on("click", ".checkbox", function() {
-
+       
       // Get the number of the button from its data attribute and hold in a variable called  toDoNumber.
       var toDoNumber = $(this).attr("data-to-do");
 
       // Select and Remove the specific <p> element that previously held the to do item number.
       $("#item-" + toDoNumber).remove();
     });
+
+
 
     </script>
 
